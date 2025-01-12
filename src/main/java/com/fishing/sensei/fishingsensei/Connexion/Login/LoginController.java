@@ -1,9 +1,7 @@
 package com.fishing.sensei.fishingsensei.Connexion.Login;
 
 import com.fishing.sensei.fishingsensei.Connexion.Login.Dto.AUserLoginBaseFormData;
-import com.fishing.sensei.fishingsensei.Connexion.Login.Dto.UserLoginFormData;
 import com.fishing.sensei.fishingsensei.Connexion.Login.Dto.UserRegisterFormData;
-import com.fishing.sensei.fishingsensei.Connexion.Login.Dto.UserRegisterFormResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
