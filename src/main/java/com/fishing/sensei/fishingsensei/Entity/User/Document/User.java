@@ -9,22 +9,25 @@ public class User {
 
     @Id
     private String _id;
-
     private String _firstName;
-    private String _lastName;
-
-    private String _email;
-
+    private String _lastName ;
     private String _password;
 
+    public String email;
+
+    public User() {}
 
     public User(UserRegisterFormData formData) {
 
         super();
 
-        this._firstName = formData.firstName;
-        this._lastName = formData.lastName;
-        this._password = formData.password;
-        this._email = formData.email;
+        _firstName = formData.firstName;
+        _lastName = formData.lastName;
+        _password = formData.password;
+        email = formData.email;
+    }
+
+    public String getPassword() {
+        return _password;
     }
 }
