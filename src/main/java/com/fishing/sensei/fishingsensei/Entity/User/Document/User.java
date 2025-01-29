@@ -9,8 +9,11 @@ public class User {
 
     @Id
     private String _id;
+
     private String _firstName;
+
     private String _lastName ;
+
     private String _password;
 
     public String email;
@@ -21,8 +24,8 @@ public class User {
 
         super();
 
-        _firstName = formData.firstName;
-        _lastName = formData.lastName;
+        _firstName = formData.firstname;
+        _lastName = formData.lastname;
         _password = formData.password;
         email = formData.email;
     }

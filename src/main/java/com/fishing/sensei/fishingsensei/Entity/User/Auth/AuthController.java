@@ -2,6 +2,7 @@ package com.fishing.sensei.fishingsensei.Entity.User.Auth;
 
 import com.fishing.sensei.fishingsensei.Entity.User.Auth.Dto.UserRegisterFormData;
 import com.fishing.sensei.fishingsensei.Entity.User.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody UserRegisterFormData loginData) {
+    public ResponseEntity<String> login(@Valid @RequestBody UserRegisterFormData loginData) {
 
         if (Objects.equals(loginData.type, "Login")) {
 
             if (!userService.loginUser(loginData))
-                return new ResponseEntity<>("Failed logged in", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Wrong username or password", HttpStatus.NOT_FOUND);
 
             return new ResponseEntity<>("Successfully logged in", HttpStatus.OK);
         }
