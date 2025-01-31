@@ -3,11 +3,12 @@ package com.fishing.sensei.fishingsensei.Entity.User.Auth;
 import com.fishing.sensei.fishingsensei.Entity.User.Auth.Dto.UserRegisterFormData;
 import com.fishing.sensei.fishingsensei.Entity.User.UserService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,20 +20,32 @@ public class AuthController {
     }
 
     @PostMapping
-    public ResponseEntity<String> login(@Valid @RequestBody UserRegisterFormData loginData) {
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody UserRegisterFormData loginData) {
 
-        if (Objects.equals(loginData.type, "Login")) {
+        if (loginData.type.equals("Login")) {
 
-            if (!userService.loginUser(loginData))
-                return new ResponseEntity<>("Wrong username or password", HttpStatus.NOT_FOUND);
-
-            return new ResponseEntity<>("Successfully logged in", HttpStatus.OK);
+            if (!userService.loginUser(loginData)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "msg", "Wrong email or password !",
+                    "code", -1
+                ));
+            }
+            return ResponseEntity.ok(Map.of(
+                "msg", "Successfully logged in !",
+                "code", 1
+            ));
         }
 
         boolean isValid = userService.registerUser(loginData);
 
-        if (!isValid) return new ResponseEntity<>("User already exist !", HttpStatus.CONFLICT);
+        if (!isValid) return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "msg", "A user with that email already exist !",
+                "code", -1
+        ));
 
-        return new ResponseEntity<>("User successfully created !", HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "msg", "User created !",
+                "code", 1
+        ));
     }
 }
