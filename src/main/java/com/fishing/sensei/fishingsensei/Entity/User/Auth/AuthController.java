@@ -1,13 +1,19 @@
 package com.fishing.sensei.fishingsensei.Entity.User.Auth;
 
+// Apk package
 import com.fishing.sensei.fishingsensei.Entity.User.Auth.Dto.UserRegisterFormData;
 import com.fishing.sensei.fishingsensei.Entity.User.UserService;
+
+//Other
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
+
+// Spring
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+// Java
 import java.util.Map;
 
 @RestController
