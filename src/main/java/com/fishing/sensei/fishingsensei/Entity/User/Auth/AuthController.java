@@ -32,13 +32,13 @@ public class AuthController {
 
             if (!userService.loginUser(loginData)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "msg", "Wrong email or password !",
-                    "code", -1
+                        "msg", "Wrong email or password !",
+                        "code", -1
                 ));
             }
             return ResponseEntity.ok(Map.of(
-                "msg", "Successfully logged in !",
-                "code", 1
+                    "msg", "Successfully logged in !",
+                    "code", 1
             ));
         }
 
