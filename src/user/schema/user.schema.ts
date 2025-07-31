@@ -1,15 +1,31 @@
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { randomUUID } from "crypto";
-import mongoose from "mongoose";
+import { HydratedDocument } from "mongoose";
 
-const userSchema = new mongoose.Schema({
-    _id: {
+export type UserDocument = HydratedDocument<User>;
+
+@Schema()
+export class User
+{
+    @Prop({
         type: String,
-        default: randomUUID(),
-    },
-    _firstname: String,
-    _lastname: String,
-    _password: String,
-    email: String,
-});
+        default: () => {
+            return randomUUID();
+        }
+    })
+    _id!: String;
 
-export default userSchema;
+    @Prop({ required: true })
+    _firstname: String;
+
+    @Prop({ required: true })
+    _lastname: String;
+
+    @Prop({ required: true })
+    _password: String;
+
+    @Prop({ required: true })
+    email: String;
+};
+
+export const UserSchema = SchemaFactory.createForClass(User);
