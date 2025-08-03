@@ -16,13 +16,13 @@ export class User
     _id!: String;
 
     @Prop({ required: true })
-    _firstname: String;
+    firstname: String;
 
     @Prop({ required: true })
-    _lastname: String;
+    lastname: String;
 
     @Prop({ required: true })
-    _password: String;
+    password: String;
 
     @Prop({ required: true })
     email: String;

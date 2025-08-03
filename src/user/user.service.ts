@@ -12,11 +12,17 @@ export class UserService {
   ) {}
 
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return this.userModel.create(createUserDto); 
   }
 
   findAll() {
     return this.userModel.find();
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({
+      email
+    }) as unknown as User;
   }
 
   findOne(id: number) {
