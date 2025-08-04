@@ -10,11 +10,11 @@ import { AuthController } from './auth/auth.controller';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    AuthModule,
     MongooseModule.forRoot(process.env.MONGO_URI as string),
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}

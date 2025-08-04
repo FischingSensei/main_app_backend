@@ -1,23 +1,19 @@
 import { UUID } from "crypto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { UserSchema } from "../schema/user.schema";
 
 @Entity()
 export class User {
+
     @PrimaryGeneratedColumn('uuid')
     _id!: UUID;
     
     @Column({ nullable: false })
-    _firstname!: string;
+    firstname!: string;
 
     @Column({  nullable: false })
-    _lastname!: string;
-
-    @Column({  nullable: false })
-    _password!: string;
+    lastname!: string;
 
     @Column({  nullable: false })
     email!: string;
-
-    @Column({  nullable: false })
-    _class!: string;
 }

@@ -3,15 +3,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './schema/user.schema';
+import { UserSchema } from './schema/user.schema';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>
+    @InjectModel(UserSchema.name) private userModel: Model<UserSchema>
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<UserSchema | null> {
     return this.userModel.create(createUserDto); 
   }
 
@@ -19,10 +20,10 @@ export class UserService {
     return this.userModel.find();
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User | null> {
     return this.userModel.findOne({
       email
-    }) as unknown as User;
+    });
   }
 
   findOne(id: number) {

@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { randomUUID } from "crypto";
 import { HydratedDocument } from "mongoose";
 
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<UserSchema>;
 
 @Schema()
-export class User
+export class UserSchema
 {
     @Prop({
         type: String,
@@ -24,8 +24,13 @@ export class User
     @Prop({ required: true })
     password: String;
 
-    @Prop({ required: true })
-    email: String;
+    @Prop({ required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/.+@.+\..+/, 'Adresse email invalide'],
+    })
+    email: string;
 };
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const userSchema = SchemaFactory.createForClass(UserSchema);
