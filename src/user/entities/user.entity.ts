@@ -1,6 +1,5 @@
 import { UUID } from "crypto";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { UserSchema } from "../schema/user.schema";
 
 @Entity()
 export class User {

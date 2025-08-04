@@ -10,10 +10,9 @@ export class AuthController {
   @Post()
   create(@Body() createAuthDto: CreateAuthDto) {
     if (createAuthDto.type === "Login") {
-      console.log("Login");
-      return;
+      return this.authService.login(createAuthDto);
     }
-    return this.authService.create(createAuthDto);
+    return this.authService.register(createAuthDto);
   }
 
   @Get()
