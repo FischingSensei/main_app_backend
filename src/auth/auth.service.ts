@@ -9,13 +9,14 @@ import { AAuthResponseDto } from './dto/response/Aauth-response.dto';
 import { AuthResponseDto } from './dto/response/auth-response.dto';
 
 import * as bcrypt from 'bcrypt';
-import { UUID } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-
+p
   constructor(
     private userService: UserService,
+    private jwtService: JwtService,
   ) {}
 
   private readonly logger: Logger = new Logger(AuthService.name, { timestamp: true });
@@ -30,13 +31,13 @@ export class AuthService {
       this.logger.error("No user exist with the provided email " + loginDto.email);
       return {
         code: -1,
-        message: "Wrong email or password !"
+        message: "Wrong email or assword !"
       }
     }
 
     const passwordChecker: boolean = await bcrypt.compare(loginDto.password, userSchema.password as string);
     if (!passwordChecker) {
-      this.logger.error(`Different password has been typed ${userSchema.email}`)
+      this.logger.error(`Different password has been typed ${userSchema.email}`);
       return {
         code: -1,
         message: "Wrong email or password !"
@@ -48,11 +49,11 @@ export class AuthService {
       message: "Successfully logged-in",
       body: {
         user: {
-          _id: userSchema._id as UUID,
-          email: userSchema.email as string,
-          firstname: userSchema.firstname as string,
-          lastname: userSchema.lastname as string
-        }
+          _id: userSchema._id,
+          email: userSchema.email,
+          firstname: userSchema.firstname,
+          lastname: userSchema.lastname,
+        } as User
       }
     }
   }
@@ -80,6 +81,16 @@ export class AuthService {
         message: "Could not create user in database ! might be because of db connection"
       }
     }
+    const payload = { email: userSchema.email, password: userSchema.password };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, {
+        expiresIn: '3600s',
+      }),
+      this.jwtService.signAsync(payload, {
+        expiresIn: '365d',
+      }),
+    ]);
 
     return {
       code: 1,

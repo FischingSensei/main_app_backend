@@ -15,4 +15,7 @@ export class User {
 
     @Column({  nullable: false })
     email!: string;
+
+    @Column({ nullable: false })
+    tokens: string;
 }

@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { randomUUID } from "crypto";
 import { HydratedDocument } from "mongoose";
+import { TokensSchema } from "src/auth/schema/tokens.schema";
 
 export type UserDocument = HydratedDocument<UserSchema>;
 
@@ -31,6 +32,9 @@ export class UserSchema
         match: [/.+@.+\..+/, 'Adresse email invalide'],
     })
     email: string;
+
+    @Prop()
+    tokens: TokensSchema;
 };
 
 export const userSchema = SchemaFactory.createForClass(UserSchema);

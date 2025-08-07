@@ -6,12 +6,20 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthController } from './auth/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(process.env.MONGO_URI as string),
     AuthModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET as string,
+      signOptions: {
+        expiresIn: '60m'
+      }
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
