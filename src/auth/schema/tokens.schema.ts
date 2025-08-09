@@ -10,12 +10,6 @@ export class TokensSchema {
 
     @Prop()
     access_token: string;
-
-    @Prop()
-    created_at?: string;
-
-    @Prop()
-    outdated_at?: string;
 }
 
 export const tokensSchema = SchemaFactory.createForClass(TokensSchema);

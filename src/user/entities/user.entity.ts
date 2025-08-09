@@ -1,4 +1,5 @@
 import { UUID } from "crypto";
+import { Tokens } from "src/auth/entities/tokens.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -17,5 +18,5 @@ export class User {
     email!: string;
 
     @Column({ nullable: false })
-    tokens: string;
+    tokens: Tokens;
 }

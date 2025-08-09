@@ -10,10 +10,11 @@ import { AuthResponseDto } from './dto/response/auth-response.dto';
 
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Tokens } from './entities/tokens.entity';
 
 @Injectable()
 export class AuthService {
-p
+
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -43,7 +44,10 @@ p
         message: "Wrong email or password !"
       }
     }
-  
+
+    // generate new access and refresh tokens 
+    const tokens = await this.generateTokens(userSchema, true);
+
     return {
       code: 1,
       message: "Successfully logged-in",
@@ -53,6 +57,7 @@ p
           email: userSchema.email,
           firstname: userSchema.firstname,
           lastname: userSchema.lastname,
+          tokens
         } as User
       }
     }
@@ -81,16 +86,17 @@ p
         message: "Could not create user in database ! might be because of db connection"
       }
     }
-    const payload = { email: userSchema.email, password: userSchema.password };
 
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        expiresIn: '3600s',
-      }),
-      this.jwtService.signAsync(payload, {
-        expiresIn: '365d',
-      }),
-    ]);
+    // generate and save access and refresh token into db
+    const tokens = await this.generateTokens(userSchema, true);
+
+    if (!tokens) {
+      this.logger.error("tokens is null this should not happend");
+      return {
+        code: -1,
+        message: "Wtf",
+      }
+    }
 
     return {
       code: 1,
@@ -100,11 +106,42 @@ p
           _id: userSchema._id,
           firstname: userSchema.firstname,
           lastname: userSchema.lastname,
-          email: userSchema.email
+          email: userSchema.email,
+          tokens: {
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken
+          }
         } as User
       }
     }
   }
+
+  async generateTokens(userSchema: UserSchema, insert=false): Promise<Tokens | null> {
+    console.log("Cocou " + insert);
+    const payload = { email: userSchema.email, _id: userSchema._id };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, {
+        expiresIn: '3600s',
+      }),
+
+      this.jwtService.signAsync(payload, {
+        expiresIn: '30d',
+      }),
+    ]);
+    
+    if (insert) {
+      await this.userService.insertTokens(userSchema, {
+        access_token: accessToken,
+        refresh_token: refreshToken
+      }) as unknown as Tokens;
+    }
+    return {
+      accessToken,
+      refreshToken
+    };
+  } 
+
 
   findAll() {
     console.log("Hello world !");
