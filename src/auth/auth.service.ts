@@ -117,7 +117,6 @@ export class AuthService {
   }
 
   async generateTokens(userSchema: UserSchema, insert=false): Promise<Tokens | null> {
-    console.log("Cocou " + insert);
     const payload = { email: userSchema.email, _id: userSchema._id };
 
     const [accessToken, refreshToken] = await Promise.all([
