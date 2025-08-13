@@ -7,7 +7,6 @@ import { UserSchema } from 'src/user/schema/user.schema';
 import { AAuthform } from './dto/body/a-auth-form.dto';
 import { AAuthResponseDto } from './dto/response/Aauth-response.dto';
 import { AuthResponseDto } from './dto/response/auth-response.dto';
-
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Tokens } from './entities/tokens.entity';
