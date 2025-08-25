@@ -28,6 +28,7 @@ export class AuthGuard implements CanActivate {
             this.logger.error("Token is expired " + payload); 
             throw new UnauthorizedException();
         }
+        request["payload"] = payload;
         return true;
     }
 

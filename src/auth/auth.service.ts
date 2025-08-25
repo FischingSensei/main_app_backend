@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { CreateAuthDto } from './dto/body/create-auth.dto';
 import { UpdateAuthDto } from './dto/body/update-auth.dto';
 import { UserService } from 'src/user/user.service';
@@ -10,6 +10,7 @@ import { AuthResponseDto } from './dto/response/auth-response.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Tokens } from './entities/tokens.entity';
+import { VerifyResponseDto } from './dto/response/verify-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -130,8 +131,8 @@ export class AuthService {
     
     if (insert) {
       await this.userService.insertTokens(userSchema, {
-        access_token: accessToken,
-        refresh_token: refreshToken
+        accessToken,
+        refreshToken
       }) as unknown as Tokens;
     }
     return {
@@ -140,6 +141,42 @@ export class AuthService {
     };
   } 
 
+  async verifyTokens(userId: string, tokens: Tokens): Promise<VerifyResponseDto> {
+    let payload = {};
+
+    try {
+      payload = await this.jwtService.verifyAsync(tokens.refreshToken);  
+      const user: UserSchema | null = await this.userService.findById(userId);
+      
+      if (payload["_id"] !== userId || user === null || user?.tokens.refreshToken !== tokens.refreshToken) { 
+        payload = {};
+        this.logger.error("User does not match jwt token");
+        throw new UnauthorizedException();
+      }
+
+      const payloadDup = { email: payload["email"], _id: payload["_id"] };
+
+      tokens.accessToken = await this.jwtService.signAsync(payloadDup, {
+        expiresIn: '3600s' 
+      });
+
+      await this.userService.insertTokensFromId(payload["_id"], tokens);
+
+      this.logger.log("Successfully verified user " + userId);
+
+      return {
+        code: 1,
+        message: "Successfully verified !",
+        body: {
+          _id: payload["_id"],
+          tokens,
+        }
+      }
+    } catch(e) {
+      this.logger.error("Couldn't verify refreshToken token might not be valid: " + e);
+      throw new UnauthorizedException();
+    }
+  }
 
   findAll() {
     console.log("Hello world !");

@@ -6,10 +6,10 @@ export type tokensDocument = HydratedDocument<TokensSchema>
 @Schema()
 export class TokensSchema {
     @Prop()
-    refresh_token: string;
+    refreshToken: string;
 
     @Prop()
-    access_token: string;
+    accessToken: string;
 }
 
 export const tokensSchema = SchemaFactory.createForClass(TokensSchema);

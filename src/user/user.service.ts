@@ -27,6 +27,12 @@ export class UserService {
     });
   }
 
+  async findById(id: string): Promise<UserSchema | null> {
+    return this.userModel.findOne({
+      _id: id
+    });
+  }
+
   async insertTokens(userSchema: UserSchema, tokensDto: TokensDto): Promise<TokensSchema | null> {
     return await this.userModel.findByIdAndUpdate(userSchema._id, {
       tokens: tokensDto
@@ -36,6 +42,15 @@ export class UserService {
     });
   }
     
+  async insertTokensFromId(_id: string, tokensDto: TokensDto): Promise<TokensSchema | null> {
+    return await this.userModel.findByIdAndUpdate(_id, {
+      tokens: tokensDto
+    },
+    {
+      new: false
+    });
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} user`;
   }

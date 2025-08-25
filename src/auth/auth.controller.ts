@@ -22,6 +22,11 @@ export class AuthController {
     return this.authService.findAll();
   }
 
+  @Post('/verify')
+  verify(@Body() body) {
+    return this.authService.verifyTokens(body.id, body.tokens);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.authService.findOne(+id);
